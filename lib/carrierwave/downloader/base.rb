@@ -24,8 +24,11 @@ module CarrierWave
         headers = remote_headers.
           reverse_merge('User-Agent' => "CarrierWave/#{CarrierWave::VERSION}")
         uri = process_uri(url.to_s)
+        puts uri.to_s
         begin
+          puts skip_ssrf_protection?(uri)
           if skip_ssrf_protection?(uri)
+            puts process_uri(url.to_s)
             response = OpenURI.open_uri(process_uri(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
           else
             request = nil

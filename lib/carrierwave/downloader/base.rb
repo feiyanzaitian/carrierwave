@@ -21,16 +21,15 @@ module CarrierWave
       # [remote_headers (Hash)] Request headers
       #
       def download(url, remote_headers = {})
-        headers1 = remote_headers.
+        headers = remote_headers.
           reverse_merge('User-Agent' => "CarrierWave/#{CarrierWave::VERSION}")
-        headers = headers1.reverse_merge('proxy' => "http://httpproxy-tcop.vip.ebay.com:80")
         uri = process_uri(url.to_s)
         begin
           if skip_ssrf_protection?(uri)
-            response = OpenURI.open_uri(process_uri(url.to_s), headers)
+            response = OpenURI.open_uri(process_uri(url.to_s), proxy: "http://httpproxy-tcop.vip.ebay.com:80")
           else
             request = nil
-            response = SsrfFilter.get(uri, headers: headers) do |req|
+            response = SsrfFilter.get(uri, proxy: "http://httpproxy-tcop.vip.ebay.com:80") do |req|
               request = req
             end
             response.uri = request.uri

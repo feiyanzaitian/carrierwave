@@ -23,21 +23,8 @@ module CarrierWave
       def download(url, remote_headers = {})
         headers = remote_headers.
           reverse_merge('User-Agent' => "CarrierWave/#{CarrierWave::VERSION}")
-        uri = process_uri(url.to_s)
-        puts uri.to_s
         begin
-          puts skip_ssrf_protection?(uri)
-          if skip_ssrf_protection?(uri)
-            puts process_uri(url.to_s)
-            response = OpenURI.open_uri(process_uri(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
-          else
-            request = nil
-            response = SsrfFilter.get(uri, :proxy => "http://httpproxy-tcop.vip.ebay.com:80") do |req|
-              request = req
-            end
-            response.uri = request.uri
-            response.value
-          end
+          response = OpenURI.open_uri(process_uri(url.to_s), headers, :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
         rescue StandardError => e
           raise CarrierWave::DownloadError, "could not download file: #{e.message}"
         end

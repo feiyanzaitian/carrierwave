@@ -26,10 +26,10 @@ module CarrierWave
         uri = process_uri(url.to_s)
         begin
           if skip_ssrf_protection?(uri)
-            response = OpenURI.open_uri(process_uri(url.to_s), proxy: "http://httpproxy-tcop.vip.ebay.com:80")
+            response = OpenURI.open_uri(process_uri(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
           else
             request = nil
-            response = SsrfFilter.get(uri, proxy: "http://httpproxy-tcop.vip.ebay.com:80") do |req|
+            response = SsrfFilter.get(uri, :proxy => "http://httpproxy-tcop.vip.ebay.com:80") do |req|
               request = req
             end
             response.uri = request.uri

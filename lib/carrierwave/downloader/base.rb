@@ -27,7 +27,7 @@ module CarrierWave
         puts uri
         begin
           puts url.to_s
-          response = OpenURI.open_uri(URI.parse(url.to_s), proxy: "http://httpproxy-tcop.vip.ebay.com:80")
+          response = OpenURI.open_loop(URI.parse(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
         rescue StandardError => e
           raise CarrierWave::DownloadError, "could not download file: #{e.message}"
         end

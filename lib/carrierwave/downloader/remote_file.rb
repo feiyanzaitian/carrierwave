@@ -4,19 +4,32 @@ module CarrierWave
       attr_reader :file, :uri
 
       def initialize(file)
+        puts file
         case file
         when String
           @file = StringIO.new(file)
+          puts "String"
+          puts @file
         when Net::HTTPResponse
           @file = StringIO.new(file.body)
           @content_type = file.content_type
           @headers = file
           @uri = file.uri
+          puts "Net::HTTPResponse"
+          puts @file
+          puts @content_type
+          puts @headers
+          puts @uri
         else
           @file = file
           @content_type = file.content_type
           @headers = file.meta
           @uri = file.base_uri
+          puts "else"
+          puts @file
+          puts @content_type
+          puts @headers
+          puts @uri
         end
       end
 

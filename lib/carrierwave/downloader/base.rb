@@ -24,10 +24,9 @@ module CarrierWave
         headers = remote_headers.
           reverse_merge('User-Agent' => "CarrierWave/#{CarrierWave::VERSION}")
         uri = process_uri(url.to_s)
-        puts uri
         begin
-          puts url.to_s
-          response = OpenURI.open_loop(URI.parse(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
+          response = OpenURI.open_uri(process_uri(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
+          puts response.status
         rescue StandardError => e
           raise CarrierWave::DownloadError, "could not download file: #{e.message}"
         end
@@ -73,8 +72,7 @@ module CarrierWave
       #     my_uploader.downloader = CarrierWave::Downloader::CustomDownloader
       #
       def skip_ssrf_protection?(uri)
-        # false
-        true
+        false
       end
     end
   end

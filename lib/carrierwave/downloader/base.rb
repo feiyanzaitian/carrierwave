@@ -35,7 +35,7 @@ module CarrierWave
             request = ::Net::HTTP::Get.new(uri)
             request['host'] = uri.hostname
             puts uri.hostname
-            response = Net::HTTP.start(uri.hostname, uri.port, 'httpproxy-tcop.vip.ebay.com', '80', :use_ssl => uri.scheme == 'https') do |http|
+            response = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') do |http|
               http.request(request)
             end
             response.uri = request.uri

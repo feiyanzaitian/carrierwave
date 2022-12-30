@@ -2,6 +2,9 @@ require 'open-uri'
 require 'ssrf_filter'
 require 'addressable'
 require 'carrierwave/downloader/remote_file'
+require 'net/http'
+require 'net/https'
+require 'uri'
 
 module CarrierWave
   module Downloader

@@ -26,7 +26,18 @@ module CarrierWave
         uri = process_uri(url.to_s)
         puts uri
         begin
-          response = OpenURI.open_uri(process_uri(url.to_s), :proxy => "http://httpproxy-tcop.vip.ebay.com:80")
+          if skip_ssrf_protection?(uri)
+            response = OpenURI.open_uri(process_uri(url.to_s), headers)
+          else
+            request = ::Net::HTTP::Get.new(uri)
+            request['host'] = uri.hostname
+            puts uri.hostname
+            response = Net::HTTP.start(uri.hostname, uri.port, 'httpproxy-tcop.vip.ebay.com', '80', :use_ssl => uri.scheme == 'https') do |http|
+              http.request(request)
+            end
+            response.uri = request.uri
+            response.value
+          end
         rescue StandardError => e
           raise CarrierWave::DownloadError, "could not download file: #{e.message}"
         end
